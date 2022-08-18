@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Max Kreminski Affiliation Generator</title>
+  <style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  html {
+    font-family: Georgia, sans-serif;
+    font-size: 18px;
+    line-height: 1.4;
+  }
+  main {
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 1rem;
+  }
+  h1, p {
+    margin-bottom: 1rem;
+  }
+  #affiliation {
+    text-align: center;
+    font-size: 2rem;
+  }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Max Kreminski Affiliation Generator</h1>
+    <p>To date, Max Kreminski has been affiliated with the University of Southern California (USC); the University of California, Santa Cruz (UCSC); and Santa Clara University (SCU). Our model predicts that Max will next take a position at:</p>
+    <p id="affiliation">[pls enable javascript]</p>
+  </main>
+  <script>
+  // Return a random item from a list.
+  function randNth(items){
+    return items[Math.floor(Math.random()*items.length)];
+  }
+
+  // Return a shuffled copy of a list, leaving the original list unmodified.
+  function shuffle(items) {
+    const newItems = [];
+    for (let i = 0; i < items.length; i++) {
+      newItems.push(items[i]);
+    }
+    for (let i = newItems.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newItems[i], newItems[j]] = [newItems[j], newItems[i]];
+    }
+    return newItems;
+  }
+
+  function genAffiliation() {
+    const allParts = ["University", "California", "Santa Cruz", "Santa Clara", "Southern"];
+    const shuffledParts = shuffle(allParts);
+    let selectedParts = shuffledParts.slice(0, randNth([2, 2, 3]));
+    if (selectedParts.indexOf("University") < 0) {
+      selectedParts.push("University");
+      selectedParts = shuffle(selectedParts);
+    }
+    if (selectedParts[0] === "University") {
+      selectedParts[0] = "University of";
+    }
+    for (let i = 1; i < selectedParts.length - 1; i++) {
+      if (selectedParts[i] === "University" && Math.random() < 0.66) {
+        selectedParts[i] = "University of";
+      }
+    }
+    if (selectedParts[selectedParts.length - 1] === "Southern") {
+      selectedParts.push(shuffledParts[selectedParts.length]);
+    }
+    const fullName = selectedParts.join(" ");
+    const abbrev = fullName.replace(/[a-z\s]/g, "");
+    return `${fullName} (${abbrev})`;
+  }
+
+  document.getElementById("affiliation").innerText = genAffiliation();
+  </script>
+</body>
+</html>
